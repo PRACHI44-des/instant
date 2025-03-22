@@ -1,0 +1,151 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INSTANT</title>
+  <style>
+    body {  background-image: url('bg4.jpg'); background-size: cover; background-position: center; background-attachment: fixed; }
+    .navbar a { color: black; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; }
+    .container { padding: 20px; }
+    .section { display: none; }
+    .section.active { display: block; }
+    input, button, textarea { width: 90%; padding: 8px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+    button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+    .video-container { display: flex; flex-direction: column; align-items: center; }
+    .video-container video { width: 80%; margin: 10px; }
+    .chatbox { border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: auto; background: white; }
+  </style>
+</head>
+<body>
+  <div id="landingPage" onclick="goToLogin()" style="width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; cursor: pointer;">
+    <h1 style="font-size: 50px; font-weight: bold;">INSTANT</h1>
+    <p style="font-size: 20px;">Click anywhere to continue</p>
+  </div>
+  <div id="loginPage" style="display: none; padding: 50px;">
+    <h1>Login / Sign Up</h1>
+    <input type="text" id="username" placeholder="Enter your name">
+    <button onclick="login()">Enter</button>
+  </div>
+  <div class="navbar">
+    <a href="#" onclick="showSection('home')">Home</a>
+    <a href="#" onclick="showSection('profile')">Profile</a>
+    <a href="#" onclick="showSection('createContent')">Create Content</a>
+    <a href="#" onclick="showSection('chatbot')">AI Chatbot</a>
+    <a href="#" onclick="showSection('leaderboard')">Leaderboard</a>
+    <a href="#" onclick="showSection('groups')">Groups</a>
+    <a href="#" onclick="showSection('liveSessions')">Live Sessions</a>
+  </div>
+  <div class="container">
+    <div id="home" class="section">
+      <h2>Welcome to INSTANT!</h2>
+      <div class="video-container" id="videoContainer">
+        <video controls onplay="startWatching(this)" src="video1.mp4"></video>
+        <video controls onplay="startWatching(this)" src="video2.mp4"></video>
+      </div>
+      <div class="quiz-container">
+        <h3>Quick Quiz</h3>
+        <p id="quizQuestion"></p>
+        <div id="quizOptions"></div>
+        <p id="quizMessage"></p>
+        <button onclick="nextQuestion()">Next Question</button>
+      </div>
+    </div>
+  </div>
+    <div id="profile" class="section">
+      <h2>Your Profile</h2>
+      <p><strong>Username:</strong> <span id="profileUsername"></span></p>
+      <p><strong>Instant Coins:</strong> <span id="profileCoins">0</span></p>
+      <p><strong>Badges:</strong> <span id="profileBadges">None</span></p>
+      <p><strong>Level:</strong><span id="levelProfile">1</span></p>
+    </div>
+    <div id="liveSessions" class="section">
+      <h2>Live Sessions</h2>
+      <p>Join a live session with experts and educators.</p>
+      <div class="live-sessions-container" id="liveSessionList">
+        <p>No live sessions available at the moment.</p>
+      </div>
+      <button onclick="joinLiveSession()">Join Now</button>
+    </div>
+     <div id="leaderboard" class="section leaderboard">
+      <h2>Leaderboard</h2>
+      <ol id="leaderboardList"></ol>
+      <p>Top learners based on coins earned!</p>
+      <ol>
+        <li>Student1 - 200 Coins</li>
+        <li>Student2 - 180 Coins</li>
+        <li>You - <span id="yourCoinsLeaderboard">0</span> Coins</li>
+      </ol>
+    </div>
+      <div id="groups" class="section groups">
+      <h2>Groups</h2>
+      <input type="text" id="groupName" placeholder="Enter group name">
+      <button onclick="createGroup()">Create Group</button>
+      <h3>Available Groups</h3>
+      <ul id="groupList"></ul>
+    </div>
+      <div id="createContent" class="section">
+      <h2>Upload Your Content</h2>
+      <input type="text" id="videoTitle" placeholder="Enter video title">
+      <input type="file" id="videoFile">
+      <button onclick="uploadVideo()">Upload</button>
+    </div>
+    <div id="chatbot" class="section">
+      <h2>Ask AI Chatbot</h2>
+      <div class="chatbox" id="chatbox"></div>
+      <input type="text" id="chatInput" placeholder="Ask something...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+  <script>
+    function goToLogin() { document.getElementById("landingPage").style.display = "none"; document.getElementById("loginPage").style.display = "block"; }
+    function login() {
+       let username = document.getElementById("username").value;
+       if (username.trim() !== "") {
+          document.getElementById("loginPage").style.display = "none";
+          document.querySelector(".navbar").style.display = "block";
+          showSection('home');
+          document.getElementById("profileUsername").innerText = username;
+       } else { alert("Please enter your name to continue."); }
+    }
+    function showSection(sectionId) { document.querySelectorAll('.section').forEach(section => section.classList.remove('active')); document.getElementById(sectionId).classList.add('active'); }
+    let coins = 0, currentQuestionIndex = 0;
+    const quizData = [
+      { question: "What is 3 x 3?", options: [6, 8, 9, 12], correct: 9 },
+      { question: "Which planet is the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], correct: "Mars" },{question:"What is 4 x 5?",options:[18,19,20,21],correct:20}, { question: "Who wrote 'Hamlet'?", options: ["Shakespeare", "Hemingway", "Fitzgerald", "Austen"], correct: "Shakespeare" },
+      { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Lisbon"], correct: "Paris" },
+      { question: "What is 15 ÷ 3?", options: [3, 5, 6, 7], correct: 5 },
+      { question: "Which gas do plants use for photosynthesis?", options: ["Oxygen", "Carbon Dioxide", "Hydrogen", "Nitrogen"], correct: "Carbon Dioxide" },
+      { question: "Who discovered gravity?", options: ["Newton", "Einstein", "Galileo", "Curie"], correct: "Newton" },
+      { question: "How many continents are there?", options: [5, 6, 7, 8], correct: 7 },
+      { question: "What is the square root of 49?", options: [5, 6, 7, 8], correct: 7 },
+      { question: "What is the chemical symbol for water?", options: ["CO2", "H2O", "O2", "NaCl"], correct: "H2O" }
+
+    ];
+    function nextQuestion() {
+      if (currentQuestionIndex < quizData.length) {
+        let questionObj = quizData[currentQuestionIndex];
+        document.getElementById("quizQuestion").innerText = questionObj.question;
+        let optionsHTML = questionObj.options.map(opt => `<button onclick="checkAnswer('${opt}')">${opt}</button>`).join(" ");
+        document.getElementById("quizOptions").innerHTML = optionsHTML;
+      } else { document.getElementById("quizMessage").innerText = "Quiz completed!"; }
+    }
+    function checkAnswer(selected) { if (selected == quizData[currentQuestionIndex].correct) { coins += 10; updateCoins(); } currentQuestionIndex++; nextQuestion(); }
+    function startWatching(video) {
+      setTimeout(() => { coins += 5; updateCoins(); }, 5000);
+    }
+    function updateCoins() { document.getElementById("profileCoins").innerText = coins; }
+
+    function sendMessage() {
+      let input = document.getElementById("chatInput").value;
+      let chatbox = document.getElementById("chatbox");
+      let response = getAIResponse(input);
+      chatbox.innerHTML += `<p><strong>You:</strong> ${input}</p>`;
+      chatbox.innerHTML += `<p><strong>AI:</strong> ${response}</p>`;
+      document.getElementById("chatInput").value = "";
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+    function getAIResponse(input) { const responses = { "hello": "Hi there!","writer of roadside stand":"Robert Frost","national animal":"Tiger","capital of india":"New Delhi","how are you": "I'm just a bot!", "bye": "Goodbye!","please suggest some study material":"Sure! Why not. Here are some books recommended for you:S.CHAND,R.D.SHARMA" }; return responses[input.toLowerCase()] || "Sorry, I don't understand."; }
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+### *📌 Explanation of the Code (Features & Functionality)*  
+
+This *gamified educational social media platform* includes a *reward system, quizzes, challenges, leaderboards, AI chatbot, and a profile system*. Here's a detailed breakdown of what each section does:  
+
+---
+
+## *🌍 1. Landing Page (Starting Screen)*
+- Displays *“INSTANT”* in bold letters.
+- Users click anywhere to proceed to the login page.  
+
+*🔹 How it works:*  
+✅ When clicked, goToLogin() hides the landing page and shows the login screen.  
+
+---
+
+## *👤 2. Login System*
+- Users enter their name and press *Enter*.  
+- Their name is stored in *sessionStorage* so it can be accessed later in the profile.  
+
+*🔹 How it works:*  
+✅ login() function checks if the input is empty. If valid, it:  
+  - Saves the username.  
+  - Shows the *navigation bar* and the *home page*.  
+  - Updates the profile section with the username.  
+
+---
+
+## *📌 3. Navigation Bar*
+The *menu bar* appears after login, with these sections:  
+- 🏠 *Home* → Educational content feed & AI Chatbot.  
+- 👤 *Profile* → User’s coins, level, and XP progress.  
+- 🏆 *Leaderboard* → Shows top learners based on coins earned.  
+- 📝 *Quizzes* → Answer questions to earn coins.  
+- 🎯 *Challenges* → Daily tasks that reward extra coins.  
+
+*🔹 How it works:*  
+✅ Clicking a menu option triggers showSection('sectionId'), which hides all sections and shows the selected one.  
+
+---
+
+## *📹 4. Home Feed - Educational Content*
+- Users can watch *educational videos* and earn coins.  
+- The *AI Chatbot* helps students with study questions.  
+
+*🔹 How it works:*  
+✅ earnCoins(5) is called when a video starts playing → adds *5 coins*.  
+✅ AI Chatbot processes input and replies with an AI-generated message.  
+
+---
+
+## *💰 5. Gamification Features*
+*🔹 Coins System:*  
+✅ Users *earn coins* by:  
+  - Watching educational videos (+5 coins).  
+  - Answering quizzes correctly (+10 coins).  
+  - Completing challenges (+15 coins).  
+
+*🔹 XP & Level Progression:*  
+✅ As users collect coins, they level up:  
+  - *Level 1* → Default.  
+  - *Level 2* → Unlocks at 50+ coins.  
+
+*🔹 Leaderboard:*  
+✅ Displays a *ranking of top learners* based on coins.  
+
+---
+
+## *📝 6. Quizzes (Test Your Knowledge)*
+- Users answer a *math question* and earn *10 coins* if correct.  
+- If wrong, they try again.  
+
+*🔹 How it works:*  
+✅ checkAnswer(9) checks the answer and updates the coin count.  
+
+---
+
+## *🎯 7. Daily Challenges*
+- Users complete a *daily learning task* to earn *15 coins*.  
+
+*🔹 How it works:*  
+✅ Clicking *"Complete Challenge"* triggers completeChallenge(), which:  
+  - Adds *15 coins*.  
+  - Displays a success message.  
+
+---
+
+## *📋 8. Profile System*
+- Shows *Username, Coins, and Level*.  
+- Users can *log out*, which resets the session.  
+
+*🔹 How it works:*  
+✅ Clicking *Logout* removes the session and reloads the page.  
+
+---
+
+## *📌 Summary of How This Works*
+1️⃣ *Login* with your name.  
+2️⃣ *Watch videos* → Earn *coins*.  
+3️⃣ *Answer quizzes* → Get *bonus rewards*.  
+4️⃣ *Complete challenges* → Earn *extra coins*.  
+5️⃣ *Check profile & leaderboard* → Track progress.  
+6️⃣ *Level up & become a top learner!*  
